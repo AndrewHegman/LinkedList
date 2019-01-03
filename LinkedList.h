@@ -18,26 +18,78 @@ class LinkedList{
         /**
          * \brief Add a new node to the list
          * \param node The node to be added
-         * \index Position node should be added
+         * \param index Position node should be added
          *        in. If index is greater than 
          *        the current size, it is added to
          *        the end. If not provided, node 
          *        will be added to the end.
         **/
         void add(T data, int index = -1);
+
+        /**
+         * \brief Return size of list
+         * \return int Number of nodes in list
+         */
         int size();
+        
+        /**
+         * \brief Return node at given index and remove it.
+         *        If index == -1, pop last node and return it.
+         * \param index The index of the node to be popped. 
+         *              Will default to _size if not provided
+         *              or if index == -1
+         */
         T pop(int index = -1);
+
+        /** 
+         * \brief Return data of node at given index
+         * \param index Index of desired node
+         * \return T template typename T of data at desired node
+         */
         T get(int index);
-        void remove(int index);
+
+        /**
+         * \brief Attempt to remove a node at a given
+         *        index. Returns true on success,
+         *        false if index is out of range.
+         * \param index Index of node to be deleted.
+         */
+        bool remove(int index);
+
+        /**
+         * \brief Destroy all nodes and set root and last
+         *        to NULL and set _size to 0.
+         */
         void clear();
+
+        /**
+         * \brief Future implementation.
+         */
         void sort();
 
     private:
+        /**
+         * \brief Pointer to root node. Null
+         *        if _size is 0.
+         */
         Node<T>* root;
+        
+        /**
+         * \brief Pointer to last node. Null
+         *        if _size is 0.
+         */
         Node<T>* last;
         
+        /**
+         * \brief Return a pointer to node
+         *        at given index.
+         * \param index Index of desired node.
+         */
         Node<T>* getNode(int index) const;
 
+        /**
+         * \brief Current number of nodes
+         */
         int _size;
 };
 
@@ -139,8 +191,8 @@ template<typename T>
 LinkedList<T>::Node<T>* LinkedList<T>::getNode(int index) const {
     // Take care of a few low-hanging fruit
     if(index == 0) return root;
-    if(index >= _size) return last;
-    if(index < 0) return NULL;
+    if(index == _size) return last;
+    if(index < 0 || index > 0) return NULL;
 
     int currentIndex = 0;
     Node<T>* currentNode = root;
@@ -153,15 +205,17 @@ LinkedList<T>::Node<T>* LinkedList<T>::getNode(int index) const {
 }
 
 template<typename T>
-void LinkedList<T>::remove(int index){
-    if(index >= _size){
+bool LinkedList<T>::remove(int index){
+    if(index > _size || index < 0) return false;
+
+    if(index == _size){
 
         // Remove last node
         getNode(_size - 1)->next = NULL;
         delete(last);
         _size--;
 
-    }else if(index <= 0){
+    }else if(index == 0){
         
         // Remove root node
         delete(root);
@@ -176,6 +230,8 @@ void LinkedList<T>::remove(int index){
         _size--;
 
     }
+
+    return true;
 }
 
 template<typename T>
